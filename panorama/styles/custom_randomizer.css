@@ -1,0 +1,1033 @@
+/* ==========================================================================
+   Deadlock Custom Randomizer & Build Roulette Styles
+   Matches Deadlock Panorama Dark Industrial / Occult & Emerald Brand Theme
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   General & Helper Classes
+   -------------------------------------------------------------------------- */
+#CustomRandomizerRoot
+{
+	width: 100%;
+	height: 100%;
+	z-index: 2500;
+}
+
+.Hidden
+{
+	visibility: collapse;
+	opacity: 0.0;
+}
+
+/* --------------------------------------------------------------------------
+   Roster Grid Mod Button (Slot 8 in Row 5, next to vanilla '?')
+   Matches exact card dimensions: width 75px, height 124px, margin 4px
+   -------------------------------------------------------------------------- */
+.CR_RosterButtonWrapper
+{
+	width: 75px;
+	height: 124px;
+	margin: 4px;
+	flow-children: down;
+	vertical-align: top;
+	horizontal-align: left;
+	z-index: 50;
+}
+
+.CR_RosterGridBtn
+{
+	width: 100%;
+	border-radius: 4px;
+	hittest: true;
+	transition-property: background-color, border, pre-transform-scale2d, box-shadow;
+	transition-duration: 0.15s;
+}
+
+/* Upper Button: 🎰 РУЛЕТКА (Height 76px) */
+.CR_SpinBtn
+{
+	height: 76px;
+	margin-bottom: 6px;
+	flow-children: down;
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#1c3527dd), to(#0f1e16dd));
+	border: 2px solid #2e4a3c;
+	box-shadow: 0px 2px 6px #00000088;
+	padding: 8px 4px 6px 4px;
+}
+
+.CR_SpinBtn:hover
+{
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#2a4f3add), to(#162d21dd));
+	border: 2px solid #5fe69e;
+	box-shadow: 0px 0px 14px #5fe69e66;
+	pre-transform-scale2d: 1.04;
+}
+
+.CR_SpinBtn:active
+{
+	background-color: #0c1611;
+	border: 2px solid #45b87c;
+	pre-transform-scale2d: 0.97;
+}
+
+.CR_SpinIcon
+{
+	font-size: 22px;
+	horizontal-align: center;
+	text-align: center;
+	vertical-align: middle;
+	margin-bottom: 3px;
+	hittest: false;
+}
+
+.CR_SpinLabel
+{
+	font-family: block, oracle, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #5fe69e;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+	horizontal-align: center;
+	text-align: center;
+	vertical-align: middle;
+	hittest: false;
+}
+
+/* Lower Button: ⚙ НАСТРОЙКИ (Height 42px) -> total 76 + 6 + 42 = 124px */
+.CR_SettingsGearBtn
+{
+	height: 42px;
+	margin: 0px;
+	flow-children: none;
+	background-color: #122019dd;
+	border: 1.5px solid #2e4a3c;
+	box-shadow: 0px 2px 4px #00000066;
+}
+
+.CR_SettingsGearBtn:hover
+{
+	background-color: #1b3226;
+	border: 1.5px solid #5fe69e;
+	box-shadow: 0px 0px 10px #5fe69e44;
+	pre-transform-scale2d: 1.05;
+}
+
+.CR_SettingsGearBtn:hover .CR_GearIconImg
+{
+	wash-color: #5fe69e;
+	pre-transform-scale2d: 1.1;
+}
+
+.CR_SettingsGearBtn:active
+{
+	background-color: #0d1712;
+	pre-transform-scale2d: 0.96;
+}
+
+.CR_GearIconImg
+{
+	width: 20px;
+	height: 20px;
+	background-image: url("s2r://panorama/images/icons/icon_gear.vsvg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	horizontal-align: center;
+	vertical-align: middle;
+	wash-color: #94a3b8;
+	hittest: false;
+	transition-property: wash-color, pre-transform-scale2d;
+	transition-duration: 0.15s;
+}
+
+.CR_HeaderControls
+{
+	flow-children: right;
+	horizontal-align: right;
+	vertical-align: middle;
+}
+
+.CR_HeaderIconBtn
+{
+	flow-children: right;
+	vertical-align: middle;
+	horizontal-align: right;
+	margin-right: 14px;
+	padding: 4px 12px;
+	background-color: #15241edd;
+	border: 1px solid #2e4a3c;
+	border-radius: 3px;
+	hittest: true;
+	transition-property: background-color, border, pre-transform-scale2d, box-shadow;
+	transition-duration: 0.15s;
+}
+
+.CR_HeaderIconBtn:hover
+{
+	background-color: #1e382bdd;
+	border: 1px solid #5fe69e;
+	box-shadow: 0px 0px 10px #5fe69e55;
+	pre-transform-scale2d: 1.03;
+}
+
+.CR_HeaderIconBtn:hover .CR_GearIconImg
+{
+	wash-color: #5fe69e;
+	pre-transform-scale2d: 1.1;
+}
+
+.CR_HeaderIconBtn:active
+{
+	background-color: #0e1a14;
+	pre-transform-scale2d: 0.97;
+}
+
+.CR_HeaderIconBtn .CR_GearIconImg
+{
+	width: 15px;
+	height: 15px;
+	margin-right: 6px;
+	vertical-align: middle;
+}
+
+.CR_HeaderBtnText
+{
+	font-family: block, oracle, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #5fe69e;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	hittest: false;
+}
+
+#CR_SettingsModal
+{
+	z-index: 3100;
+}
+
+#CR_RouletteModal
+{
+	z-index: 3000;
+}
+
+/* --------------------------------------------------------------------------
+   Modals (Backdrop & Container)
+   -------------------------------------------------------------------------- */
+.CR_ModalBackdrop
+{
+	width: 100%;
+	height: 100%;
+	background-color: #06090ee8;
+	z-index: 3000;
+	visibility: visible;
+	opacity: 1.0;
+	transition-property: opacity;
+	transition-duration: 0.2s;
+}
+
+.CR_ModalBackdrop.Hidden,
+#CR_RouletteModal.Hidden,
+#CR_SettingsModal.Hidden,
+.CR_ModalBackdrop[hidden]
+{
+	visibility: collapse !important;
+	opacity: 0.0 !important;
+}
+
+.CR_DialogWindow
+{
+	horizontal-align: center;
+	vertical-align: middle;
+	background-color: #10191ae6;
+	border: 2px solid #2e4a3d;
+	border-radius: 6px;
+	box-shadow: 0px 0px 30px #000000f0;
+	flow-children: down;
+	padding: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Settings Modal Dialog
+   -------------------------------------------------------------------------- */
+#CR_SettingsModal .CR_DialogWindow
+{
+	width: 1050px;
+	max-height: 85%;
+}
+
+.CR_Header
+{
+	width: 100%;
+	flow-children: right;
+	border-bottom: 1px solid #ffffff15;
+	padding-bottom: 12px;
+	margin-bottom: 16px;
+}
+
+#CR_TitleWrap,
+.CR_TitleWrap
+{
+	flow-children: down;
+	width: fill-parent-flow(1.0);
+}
+
+.CR_TitleText
+{
+	font-family: oracle, block, sans-serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #f1f5f9;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	margin-bottom: 4px;
+}
+
+.CR_SubtitleText
+{
+	font-family: block, sans-serif;
+	font-size: 13px;
+	color: #94a3b8;
+}
+
+.CR_CloseButton
+{
+	width: 32px;
+	height: 32px;
+	horizontal-align: right;
+	vertical-align: top;
+	background-color: #ffffff10;
+	border-radius: 4px;
+	transition-property: background-color;
+	transition-duration: 0.15s;
+}
+
+.CR_CloseButton:hover
+{
+	background-color: #ef444488;
+}
+
+.CR_CloseButton Label
+{
+	font-size: 16px;
+	color: #ffffff;
+	horizontal-align: center;
+	vertical-align: middle;
+	hittest: false;
+}
+
+/* --------------------------------------------------------------------------
+   Settings Toolbar
+   -------------------------------------------------------------------------- */
+.CR_Toolbar
+{
+	width: 100%;
+	flow-children: right;
+	vertical-align: middle;
+	margin-bottom: 14px;
+}
+
+.CR_FilterBtn
+{
+	padding: 6px 14px;
+	background-color: #172421;
+	border: 1px solid #2d4538;
+	border-radius: 4px;
+	margin-right: 10px;
+	transition-property: background-color, border;
+	transition-duration: 0.15s;
+}
+
+.CR_FilterBtn:hover
+{
+	background-color: #24382d;
+	border: 1px solid #5fe69eaa;
+}
+
+.CR_FilterBtn Label
+{
+	font-family: block, sans-serif;
+	font-size: 13px;
+	font-weight: semi-bold;
+	color: #cbd5e1;
+	text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Language Switcher (RU / ENG)
+   -------------------------------------------------------------------------- */
+.CR_LangSwitchWrap
+{
+	flow-children: right;
+	vertical-align: middle;
+	margin-left: 8px;
+	margin-right: 14px;
+}
+
+.CR_LangBtn
+{
+	width: 44px;
+	height: 32px;
+	margin-right: 4px;
+	background-color: #15221d;
+	border: 1px solid #2d4538;
+	border-radius: 3px;
+	transition-property: background-color, border, pre-transform-scale2d, box-shadow;
+	transition-duration: 0.12s;
+}
+
+.CR_LangBtn:hover
+{
+	background-color: #24382d;
+	border: 1px solid #5fe69e88;
+}
+
+.CR_LangBtn.ActiveLang
+{
+	background-color: #5fe69e33;
+	border: 1.5px solid #5fe69e;
+	box-shadow: 0px 0px 8px #5fe69e55;
+}
+
+.CR_LangBtn Label
+{
+	horizontal-align: center;
+	vertical-align: middle;
+	font-family: block, oracle, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #94a3b8;
+	hittest: false;
+}
+
+.CR_LangBtn.ActiveLang Label
+{
+	color: #5fe69e;
+	font-weight: bold;
+}
+
+.CR_SearchEntry
+{
+	width: 260px;
+	height: 34px;
+	background-color: #0b1411;
+	border: 1px solid #2d4538;
+	border-radius: 4px;
+	color: #ffffff;
+	font-size: 14px;
+	padding: 4px 10px;
+	margin-right: 12px;
+}
+
+.CR_SearchEntry:focus
+{
+	border: 1px solid #5fe69e;
+}
+
+.CR_CountBadge
+{
+	vertical-align: middle;
+	horizontal-align: right;
+	font-family: block, oracle;
+	font-size: 15px;
+	font-weight: bold;
+	color: #5fe69e;
+	background-color: #00000066;
+	padding: 6px 12px;
+	border-radius: 4px;
+	border: 1px solid #5fe69e44;
+}
+
+/* --------------------------------------------------------------------------
+   Hero Grid (Cards in Settings)
+   -------------------------------------------------------------------------- */
+.CR_GridScroll
+{
+	width: 100%;
+	max-height: 520px;
+	overflow: squish scroll;
+	margin-bottom: 16px;
+	padding-right: 6px;
+}
+
+.CR_HeroGrid
+{
+	width: 100%;
+	flow-children: right-wrap;
+	overflow: noclip;
+}
+
+.CR_HeroCard
+{
+	width: 112px;
+	height: 206px;
+	margin: 5px;
+	background-color: #121c18;
+	border: 2px solid #24352e;
+	border-radius: 5px;
+	flow-children: down;
+	padding: 4px;
+	transition-property: border, pre-transform-scale2d, background-color, box-shadow;
+	transition-duration: 0.12s;
+}
+
+.CR_HeroCard:hover
+{
+	background-color: #1a2923;
+	border: 2px solid #3d594b;
+	pre-transform-scale2d: 1.03;
+	z-index: 10;
+}
+
+.CR_HeroCard.Selected
+{
+	border: 2px solid #5fe69e;
+	background-color: #13241d;
+	box-shadow: 0px 0px 10px #5fe69e44;
+}
+
+.CR_PortraitWrap
+{
+	width: 100%;
+	height: 172px;
+	background-color: #07100d;
+	border-radius: 3px;
+	overflow: clip;
+}
+
+.CR_HeroImage
+{
+	width: 100%;
+	height: 100%;
+	scaling: stretch-to-cover-preserve-aspect;
+	horizontal-align: center;
+	vertical-align: middle;
+}
+
+.CR_FallbackInitial
+{
+	font-family: oracle;
+	font-size: 56px;
+	color: #475569;
+	horizontal-align: center;
+	vertical-align: middle;
+}
+
+.CR_CardInfo
+{
+	width: 100%;
+	height: 22px;
+	flow-children: right;
+	vertical-align: middle;
+	margin-top: 3px;
+	padding: 0px 2px;
+}
+
+.CR_CheckIcon
+{
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 5px;
+	border-radius: 2px;
+	background-color: #060e0acc;
+	border: 1.5px solid #ffffff55;
+	hittest: false;
+	transition-property: background-color, border, box-shadow;
+	transition-duration: 0.12s;
+}
+
+.CR_HeroCard.Selected .CR_CheckIcon
+{
+	background-color: #5fe69e;
+	border: 1.5px solid #70f8c1;
+	box-shadow: 0px 0px 8px #5fe69eaa;
+}
+
+.CR_HeroName
+{
+	font-family: oracle, block, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #f8fafc;
+	text-overflow: shrink;
+	vertical-align: middle;
+	text-align: left;
+	width: fill-parent-flow(1.0);
+	height: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Footer Buttons
+   -------------------------------------------------------------------------- */
+.CR_Footer
+{
+	width: 100%;
+	flow-children: right;
+	horizontal-align: right;
+	border-top: 1px solid #ffffff15;
+	padding-top: 14px;
+}
+
+.CR_CenteredFooter
+{
+	width: 100%;
+	flow-children: none;
+	border-top: 1px solid #ffffff15;
+	padding-top: 16px;
+}
+
+.CR_FooterCenterWrap
+{
+	horizontal-align: center;
+	vertical-align: middle;
+	flow-children: right;
+}
+
+.CR_PrimaryButton
+{
+	padding: 10px 24px;
+	background-color: #5fe69e;
+	border-radius: 4px;
+	transition-property: background-color, pre-transform-scale2d, box-shadow;
+	transition-duration: 0.15s;
+}
+
+#CR_FooterSpinBtn
+{
+	margin-right: 32px;
+}
+
+#CR_SpinAgainBtn
+{
+	margin-right: 28px;
+}
+
+.CR_PrimaryButton:hover
+{
+	background-color: #70f8c1;
+	pre-transform-scale2d: 1.03;
+	box-shadow: 0px 0px 14px #5fe69e88;
+}
+
+.CR_PrimaryButton Label
+{
+	font-family: block, oracle;
+	font-size: 15px;
+	font-weight: bold;
+	color: #061a12;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	hittest: false;
+}
+
+.CR_SecondaryButton
+{
+	padding: 10px 20px;
+	background-color: #172421;
+	border: 1px solid #2e473a;
+	border-radius: 4px;
+	transition-property: background-color, border;
+	transition-duration: 0.15s;
+}
+
+.CR_SecondaryButton:hover
+{
+	background-color: #24382e;
+	border: 1px solid #5fe69e88;
+}
+
+.CR_SecondaryButton Label
+{
+	font-family: block, sans-serif;
+	font-size: 14px;
+	font-weight: semi-bold;
+	color: #cbd5e1;
+	text-transform: uppercase;
+	hittest: false;
+}
+
+.CR_PrimaryButton.Disabled,
+.CR_SecondaryButton.Disabled
+{
+	opacity: 0.35;
+	pre-transform-scale2d: 1.0;
+}
+
+/* --------------------------------------------------------------------------
+   3-Slot Roulette Modal Dialog (Horizontal layout for 3 heroes & builds)
+   -------------------------------------------------------------------------- */
+.CR_RouletteWindow
+{
+	width: 960px;
+	background-color: #0c1613fa;
+	border: 2px solid #2e4a3d;
+	box-shadow: 0px 0px 30px #000000ee;
+}
+
+.CR_RouletteSlotsContainer
+{
+	width: 100%;
+	flow-children: right;
+	horizontal-align: center;
+	margin-bottom: 20px;
+}
+
+.CR_RouletteSlotCard
+{
+	width: 290px;
+	background-color: #0e1d17cc;
+	border: 1.5px solid #243b30;
+	border-radius: 6px;
+	padding: 14px 12px;
+	margin: 0px 6px;
+	flow-children: down;
+	box-shadow: 0px 4px 12px #00000088;
+}
+
+/* Priority Badges */
+.CR_PriorityBadge
+{
+	width: 100%;
+	height: 32px;
+	border-radius: 5px;
+	horizontal-align: center;
+	vertical-align: middle;
+	margin-bottom: 12px;
+	padding: 4px 8px;
+}
+
+.CR_PriorityBadge Label
+{
+	font-family: block, oracle, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	horizontal-align: center;
+	vertical-align: middle;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.CR_PriorityHigh
+{
+	background-color: #7e22ce2b;
+	border: 1.5px solid #a855f7;
+	box-shadow: 0px 0px 8px #a855f744;
+}
+
+.CR_PriorityHigh Label
+{
+	color: #e9d5ff;
+	text-shadow: 0px 1px 3px #000000cc;
+}
+
+.CR_PriorityMed
+{
+	background-color: #0284c733;
+	border: 1.5px solid #38bdf8;
+	box-shadow: 0px 0px 10px #38bdf844;
+}
+
+.CR_PriorityMed Label
+{
+	color: #7dd3fc;
+	text-shadow: 0px 1px 3px #000000cc;
+}
+
+.CR_PriorityLow
+{
+	background-color: #33415533;
+	border: 1.5px solid #64748b;
+}
+
+.CR_PriorityLow Label
+{
+	color: #cbd5e1;
+	text-shadow: 0px 1px 2px #000000cc;
+}
+
+/* Slot Sections */
+.CR_SlotSectionLabel
+{
+	font-family: block, oracle;
+	font-size: 11px;
+	font-weight: bold;
+	color: #94a3b8;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	margin-bottom: 6px;
+}
+
+/* Hero Box (Larger, sharp portrait) */
+.CR_SlotHeroBox
+{
+	width: 100%;
+	height: 124px;
+	background-color: #101c17;
+	border: 1.5px solid #243b30;
+	border-radius: 5px;
+	flow-children: right;
+	padding: 6px 8px;
+	vertical-align: middle;
+	margin-bottom: 14px;
+}
+
+.CR_SlotHeroImg
+{
+	width: 76px;
+	height: 110px;
+	border-radius: 4px;
+	border: 1.5px solid #2e4a3c;
+	background-color: #07100d;
+	margin-right: 10px;
+	vertical-align: middle;
+	scaling: stretch-to-fit-preserve-aspect;
+}
+
+.CR_SlotHeroInfoCol
+{
+	flow-children: down;
+	vertical-align: middle;
+	width: fill-parent-flow(1.0);
+}
+
+.CR_SlotHeroName
+{
+	font-family: block, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	color: #ffffff;
+	vertical-align: middle;
+	text-shadow: 0px 1px 3px #000000;
+	width: fill-parent-flow(1.0);
+	text-overflow: shrink;
+}
+
+/* Build Strip Viewport */
+.CR_SlotStripViewport
+{
+	width: 100%;
+	height: 76px;
+	horizontal-align: center;
+	background-color: #08100d;
+	border: 1.5px solid #243b30;
+	border-radius: 5px;
+	overflow: clip;
+}
+
+.CR_RoulettePointer
+{
+	horizontal-align: center;
+	vertical-align: top;
+	font-family: block, oracle, sans-serif;
+	font-size: 13px;
+	color: #5fe69e;
+	text-shadow: 0px 0px 6px #5fe69e;
+	margin-top: -2px;
+	z-index: 100;
+	hittest: false;
+}
+
+.CR_BuildStrip
+{
+	horizontal-align: left;
+	flow-children: right;
+	height: 100%;
+	vertical-align: middle;
+	transform: translateX(0px);
+}
+
+.CR_SpinningAnimation
+{
+	transition-property: transform;
+	transition-duration: 1.85s;
+	transition-timing-function: cubic-bezier(0.15, 0.9, 0.25, 1.0);
+}
+
+.CR_StripItemCompact
+{
+	width: 100px;
+	height: 64px;
+	margin: 0px 5px;
+	border-radius: 4px;
+	flow-children: down;
+	vertical-align: middle;
+	padding: 4px;
+	box-shadow: inset 0px 0px 8px #000000aa;
+	transition-property: opacity, border, box-shadow;
+	transition-duration: 0.3s;
+	opacity: 1.0;
+}
+
+/* Dim non-winning neighbors when roll completes so center winner stands out clearly */
+.CR_BuildStrip.CR_FinishedSpin .CR_StripItemCompact
+{
+	opacity: 0.22;
+}
+
+.CR_BuildStrip.CR_FinishedSpin .CR_StripItemCompact.CR_WinningBuildItem
+{
+	opacity: 1.0;
+}
+
+.CR_StripItemCompact.Build_gun
+{
+	background-color: #d9770633;
+	border: 1.5px solid #f59e0b88;
+}
+
+.CR_StripItemCompact.Build_spirit
+{
+	background-color: #9333ea33;
+	border: 1.5px solid #a855f788;
+}
+
+.CR_StripItemCompact.Build_melee
+{
+	background-color: #05966933;
+	border: 1.5px solid #10b98188;
+}
+
+/* Winning build highlights (clean 2px colored border + subtle inner glow, art remains crisp) */
+.CR_StripItemCompact.CR_WinningBuildItem.Build_gun
+{
+	background-color: #d9770638;
+	border: 2px solid #f59e0b;
+	box-shadow: inset 0px 0px 8px #f59e0b55;
+}
+
+.CR_StripItemCompact.CR_WinningBuildItem.Build_gun .CR_StripItemText
+{
+	color: #fbbf24;
+	text-shadow: 0px 1px 2px #000000;
+}
+
+.CR_StripItemCompact.CR_WinningBuildItem.Build_spirit
+{
+	background-color: #9333ea38;
+	border: 2px solid #c084fc;
+	box-shadow: inset 0px 0px 8px #a855f755;
+}
+
+.CR_StripItemCompact.CR_WinningBuildItem.Build_spirit .CR_StripItemText
+{
+	color: #e9d5ff;
+	text-shadow: 0px 1px 2px #000000;
+}
+
+.CR_StripItemCompact.CR_WinningBuildItem.Build_melee
+{
+	background-color: #05966938;
+	border: 2px solid #34d399;
+	box-shadow: inset 0px 0px 8px #10b98155;
+}
+
+.CR_StripItemCompact.CR_WinningBuildItem.Build_melee .CR_StripItemText
+{
+	color: #a7f3d0;
+	text-shadow: 0px 1px 2px #000000;
+}
+
+.CR_StripIconWrap
+{
+	width: 32px;
+	height: 32px;
+	horizontal-align: center;
+	margin-bottom: 2px;
+	hittest: false;
+}
+
+.CR_StripItemIconImg
+{
+	width: 100%;
+	height: 100%;
+	horizontal-align: center;
+	vertical-align: middle;
+	scaling: stretch-to-fit-preserve-aspect;
+	hittest: false;
+}
+
+.CR_StripItemText
+{
+	font-family: block, sans-serif;
+	font-size: 13px;
+	font-weight: 800;
+	color: #ffffff;
+	horizontal-align: center;
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	text-shadow: 0px 1px 2px #000000;
+	hittest: false;
+}
+
+.CR_SlotResultBuild
+{
+	font-family: block, sans-serif;
+	font-size: 16px;
+	font-weight: 800;
+	horizontal-align: center;
+	margin-top: 8px;
+	text-shadow: 0px 1px 3px #000000;
+	height: 22px;
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+}
+
+/* Warning Toast Notification */
+.CR_WarningToast
+{
+	horizontal-align: center;
+	vertical-align: top;
+	margin-top: 100px;
+	background-color: #210e14fa;
+	border: 1.5px solid #ef4444;
+	border-radius: 6px;
+	box-shadow: 0px 6px 24px #000000dd;
+	flow-children: right;
+	padding: 10px 18px;
+	z-index: 3000;
+	opacity: 0.0;
+	transform: translateY(-20px);
+	transition-property: opacity, transform;
+	transition-duration: 0.25s;
+}
+
+.CR_WarningToast.ToastVisible
+{
+	opacity: 1.0;
+	transform: translateY(0px);
+}
+
+.CR_WarningToast.ToastHidden
+{
+	opacity: 0.0;
+	transform: translateY(-20px);
+}
+
+.CR_ToastIcon
+{
+	font-size: 18px;
+	vertical-align: middle;
+	margin-right: 10px;
+	hittest: false;
+}
+
+.CR_ToastMsg
+{
+	font-family: block, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	color: #fca5a5;
+	vertical-align: middle;
+	letter-spacing: 0.5px;
+	text-shadow: 0px 1px 2px #000000;
+	hittest: false;
+}
+
+.CR_CountBadge.WarningCount
+{
+	color: #f87171;
+	border: 1px solid #ef444488;
+}
