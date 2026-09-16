@@ -16,16 +16,12 @@ A Panorama UI mod for Deadlock that replaces the vanilla random hero picker with
   - Clears previous hero selections automatically before applying the new roll.
   - Protected against duplicate priority cycling upon closing or accepting.
 - **Hero Pool Management:**
-  - Supports all 38 heroes (26 base roster + 12 Hero Labs heroes).
+  - Supports all 38 heroes.
   - Real-time search, select all, deselect all, and individual hero toggles.
   - Minimum 3 heroes required to roll: displays a toast notification and blocks spin if fewer than 3 heroes are selected.
 - **Bilingual Support:**
   - English by default.
   - Russian language toggle available in settings ([RU] / [ENG]).
-- **UI Design:**
-  - Large hero portrait cards (76x110px) matching native 1:1.45 card aspect ratios without blur.
-  - Centered roulette strip landing directly under the indicator arrow.
-  - Directional drop shadows and single-layer texture sampling for sharp text and icons.
 
 ## Installation
 
