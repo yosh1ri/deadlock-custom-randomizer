@@ -74,7 +74,7 @@
         { id: "wraith", heroId: 7, name: "Wraith", ru: "Призрак", token: "#hero_wraith", icon: "wraith", released: true },
         { id: "yamato", heroId: 27, name: "Yamato", ru: "Ямато", token: "#hero_yamato", icon: "yamato", released: true },
         { id: "calico", heroId: 16, name: "Calico", ru: "Калико", token: "#hero_nano", icon: "nano", released: true },
-        { id: "vyper", heroId: 21, name: "Vyper", ru: "Вайпер", token: "#hero_kali", icon: "kali", released: true },
+        { id: "vyper", heroId: 21, name: "Vyper", ru: "Вайпер", token: "#hero_kali", icon: "kali", cardClass: "hero_viper", released: true },
         { id: "sinclair", heroId: 60, name: "Sinclair", ru: "Синклер", token: "#hero_magician", icon: "magician", released: true },
         { id: "apollo", heroId: 77, name: "Apollo", ru: "Аполлон", token: "#hero_fencer", icon: "fencer", released: true },
         { id: "billy", heroId: 72, name: "Billy", ru: "Билли", token: "#hero_punkgoat", icon: "punkgoat", released: true },
@@ -1408,12 +1408,42 @@
             const rosterGrid = this.rootPanel.FindChildTraverse("RosterHeroes");
             if (!rosterGrid || !rosterGrid.IsValid()) return null;
 
-            const heroClassName = targetHero.token ? targetHero.token.replace("#", "") : `hero_${targetHero.id}`;
+            // Build candidate CSS classes to match the HeroCard panel
+            const candidateClasses = [];
+            if (targetHero.cardClass) candidateClasses.push(targetHero.cardClass);
+            if (targetHero.id === "vyper") candidateClasses.push("hero_viper", "hero_vyper");
+            if (targetHero.id === "mo_and_krill") candidateClasses.push("hero_krill", "hero_digger", "hero_mo_and_krill");
+            if (targetHero.token) candidateClasses.push(targetHero.token.replace("#", ""));
+            if (targetHero.id) candidateClasses.push(`hero_${targetHero.id}`);
+            if (targetHero.icon) candidateClasses.push(`hero_${targetHero.icon}`);
+            if (targetHero.name) {
+                candidateClasses.push(`hero_${targetHero.name.toLowerCase().replace(/[^a-z0-9]/g, "_")}`);
+            }
 
-            // Method 1: Find by hero-specific class (e.g. 'hero_atlas', 'hero_bebop')
-            const matchingClassPanels = rosterGrid.FindChildrenWithClassTraverse(heroClassName);
-            if (matchingClassPanels && matchingClassPanels.length > 0) {
-                return matchingClassPanels[0];
+            const uniqueClasses = candidateClasses.filter((c, idx) => c && candidateClasses.indexOf(c) === idx);
+
+            // Method 1: Find directly by candidate CSS classes in RosterHeroes
+            for (let k = 0; k < uniqueClasses.length; k++) {
+                const cls = uniqueClasses[k];
+                const matching = rosterGrid.FindChildrenWithClassTraverse(cls);
+                if (matching && matching.length > 0) {
+                    for (let m = 0; m < matching.length; m++) {
+                        const p = matching[m];
+                        if (p && p.IsValid && p.IsValid()) {
+                            if ((p.BHasClass && p.BHasClass("HeroCard")) || (p.HasClass && p.HasClass("HeroCard"))) {
+                                return p;
+                            }
+                            let cur = p;
+                            while (cur && cur.IsValid && cur.IsValid() && cur !== rosterGrid) {
+                                if ((cur.BHasClass && cur.BHasClass("HeroCard")) || (cur.HasClass && cur.HasClass("HeroCard"))) {
+                                    return cur;
+                                }
+                                cur = cur.GetParent ? cur.GetParent() : null;
+                            }
+                            return p;
+                        }
+                    }
+                }
             }
 
             // Method 2: Scan all CitadelHeroCard panels in RosterHeroes
@@ -1423,14 +1453,42 @@
                     const c = heroCards[i];
                     if (!c || !c.IsValid()) continue;
 
-                    if (c.BHasClass && c.BHasClass(heroClassName)) return c;
-                    if (c.HasClass && c.HasClass(heroClassName)) return c;
-
-                    const heroImg = c.FindChildTraverse("HeroImage");
-                    if (heroImg && heroImg.IsValid && heroImg.IsValid()) {
-                        const src = heroImg.src || "";
-                        if (targetHero.icon && src.indexOf(targetHero.icon) !== -1) {
+                    // 2a. Match card classes against candidate classes
+                    for (let k = 0; k < uniqueClasses.length; k++) {
+                        const cls = uniqueClasses[k];
+                        if ((c.BHasClass && c.BHasClass(cls)) || (c.HasClass && c.HasClass(cls))) {
                             return c;
+                        }
+                    }
+
+                    // 2b. Match CitadelHeroImage attributes or src
+                    const heroImg = c.FindChildTraverse("HeroImage") || c.FindChildTraverse("CitadelHeroImage");
+                    if (heroImg && heroImg.IsValid && heroImg.IsValid()) {
+                        // Match hero_id attribute or property
+                        if (targetHero.heroId !== undefined) {
+                            try {
+                                if (heroImg.GetAttributeInt && heroImg.GetAttributeInt("hero_id", -1) === targetHero.heroId) return c;
+                                if (heroImg.GetAttributeString && heroImg.GetAttributeString("hero_id", "") === String(targetHero.heroId)) return c;
+                                if (heroImg.heroid === targetHero.heroId || heroImg.hero_id === targetHero.heroId) return c;
+                            } catch (e) {}
+                        }
+
+                        // Match heroname attribute
+                        try {
+                            const heroNameAttr = heroImg.GetAttributeString ? heroImg.GetAttributeString("heroname", "") : "";
+                            if (heroNameAttr) {
+                                if (targetHero.token && heroNameAttr === targetHero.token.replace("#", "")) return c;
+                                if (heroNameAttr === targetHero.id || heroNameAttr === targetHero.icon) return c;
+                                if (uniqueClasses.indexOf(heroNameAttr) !== -1) return c;
+                            }
+                        } catch (e) {}
+
+                        // Match src substring
+                        const src = heroImg.src || "";
+                        if (src) {
+                            if (targetHero.icon && src.indexOf(targetHero.icon) !== -1) return c;
+                            if (targetHero.id && src.indexOf(targetHero.id) !== -1) return c;
+                            if (targetHero.token && src.indexOf(targetHero.token.replace("#hero_", "")) !== -1) return c;
                         }
                     }
                 }
